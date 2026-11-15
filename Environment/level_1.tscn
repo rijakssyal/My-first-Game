@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://fb8yuf6mbd8x"]
+
+[ext_resource type="MeshLibrary" uid="uid://cwhf1lyd4gq2j" path="res://assets/models/blocks.meshlib" id="1_1tda5"]
+[ext_resource type="PackedScene" uid="uid://cv5gh6fxiyw3r" path="res://Player/ball.tscn" id="2_75qcf"]
+[ext_resource type="Script" uid="uid://ihtkccuvjkmx" path="res://Environment/DeathZone.gd" id="3_paeto"]
+[ext_resource type="Script" uid="uid://dkop2ngw5w1dy" path="res://Environment/VictoryZone.gd" id="4_wvdol"]
+
+[sub_resource type="Environment" id="Environment_p32b5"]
+background_mode = 1
+background_color = Color(0.16862746, 0.4745098, 0.6784314, 1)
+ambient_light_color = Color(0.11764706, 0.6745098, 0.94509804, 1)
+tonemap_mode = 3
+fog_enabled = true
+fog_light_color = Color(0.40392157, 0.57254905, 0.7411765, 1)
+adjustment_enabled = true
+adjustment_brightness = 0.75
+adjustment_contrast = 1.5
+adjustment_saturation = 1.2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_p32b5"]
+size = Vector3(150, 1, 150)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d3ql5"]
+size = Vector3(3.0168457, 1.6209717, 3)
+
+[node name="Level 01" type="Node3D" unique_id=1005009555]
+
+[node name="GridMap" type="GridMap" parent="." unique_id=570404377]
+mesh_library = ExtResource("1_1tda5")
+cell_size = Vector3(4, 4, 4)
+cell_center_x = false
+cell_center_y = false
+cell_center_z = false
+data = {
+"cells": PackedInt32Array(0, 0, 0, 1, 0, 1, 65535, 0, 655361, 0, 65535, 0, 65535, 65535, 1048578, 1, 65535, 2, 0, 1, 1441793, 1, 1, 1441794, 65535, 1, 655362, 0, 65534, 0, 0, 65533, 4, 65536, 65532, 0, 65537, 65532, 0, 131071, 65532, 0, 131071, 65531, 1441792, 65536, 65531, 1441792, 65537, 65531, 1441792, 65537, 65529, 1441792, 65536, 65529, 1441792, 131071, 65529, 1441792, 65536, 65528, 1441797, 65537, 65528, 1441792, 65537, 65527, 1441792, 65536, 65527, 1441792, 131071, 65527, 1441792, 131071, 65528, 1441792)
+}
+metadata/_editor_floor_ = Vector3(0, 0, 0)
+
+[node name="Ball" parent="GridMap" unique_id=642564411 instance=ExtResource("2_75qcf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=500733322]
+transform = Transform3D(0.49999997, -0.75000006, 0.4330127, 0, 0.49999997, 0.86602545, -0.86602545, -0.4330127, 0.24999997, 0, 5, 0)
+light_color = Color(0.972549, 0.9019608, 0.8039216, 1)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="DirectionalLight3D" unique_id=1929761774]
+environment = SubResource("Environment_p32b5")
+
+[node name="DeathZone" type="Area3D" parent="." unique_id=910289453]
+script = ExtResource("3_paeto")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeathZone" unique_id=1136578045]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+shape = SubResource("BoxShape3D_p32b5")
+
+[node name="VictoryZone" type="Area3D" parent="." unique_id=1452117389]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16332173, 2.827392, -32.223625)
+script = ExtResource("4_wvdol")
+NEXT_LEVEL = "uid://bwi831m1bqutc"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VictoryZone" unique_id=281128808]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.008422852, 0.19955635, 0.18497086)
+shape = SubResource("BoxShape3D_d3ql5")
+
+[connection signal="body_entered" from="DeathZone" to="DeathZone" method="_on_body_entered"]
+[connection signal="body_entered" from="VictoryZone" to="VictoryZone" method="_on_body_entered"]
